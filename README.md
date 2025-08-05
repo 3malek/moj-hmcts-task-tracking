@@ -1,22 +1,26 @@
 ### Project Overview 
 Task management API with a frontend
 
-
 ### Getting Started 
+i. Download the code from https://github.com/3malek/moj-hmcts-task-tracking  
+* This is the backend: /hmcts_task_tracking_be/  
+* This is the frontend: /hmcts_task_tracking_fe/  
 
-For the backend, run the following (on the command line):  
+ii. On your workstation, create a folder for the frontend, e.g. /task_tracking_frontend/  
+iii. cd into this frontend folder and run the following (on the command line):  
+npx govuk-prototype-kit@latest create  
+iv. Copy the contents of /hmcts_task_tracking_fe/ into your frontend folder, which you created above (basically, you need to update the app folder).  
+v. Run the following (from inside your frontend folder):  
+npm run dev  
+
+vi. For the backend, inside /hmcts_task_tracking_be/ run the following (on the command line):  
 ./gradlew build  
-
-Then run (one of the following):
+vii. Then run (one of the following):
 * ./gradlew bootRun
 * ./java -jar build/libs/hmcts-0.0.1-SNAPSHOT.jar
 * within an IDE (e.g. IntelliJ)
 
-For the frontend, run the following:  
-npm run dev  
-
-Then, via a web browser, navigate to: http://localhost:3000/
-
+viii. Finally, via a web browser, navigate to: http://localhost:3000/  
 
 ### Usage Instructions
 API documentation exists at the following link:  

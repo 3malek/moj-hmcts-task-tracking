@@ -1,12 +1,19 @@
+# Ignore everything
+*
+
+# But not this folder
+!app/
+
+
 # Node.js ignores
-node_modules/
+#node_modules/
 
 # Prototype ignores - per-user
-.tmp/
-.env
-migrate.log
-usage-data-config.json
+#.tmp/
+#.env
+#migrate.log
+#usage-data-config.json
 
 # General ignores
-.DS_Store
-.idea
+#.DS_Store
+#.idea

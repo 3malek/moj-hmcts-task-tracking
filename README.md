@@ -13,16 +13,14 @@ Then run (one of the following):
 * within an IDE (e.g. IntelliJ)
 
 For the frontend, run the following:  
-./npm run dev  
+npm run dev  
 
 Then, via a web browser, navigate to: http://localhost:3000/
 
 
 ### Usage Instructions
 API documentation exists at the following link:  
-https://github.com/3malek/TestApiDocs/wiki 
-
-UPDATE THIS
+https://github.com/3malek/moj-hmcts-task-tracking/wiki
 
 
 ###  Testing

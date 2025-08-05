@@ -1,0 +1,202 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Question page template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+  text: "Back",
+  href: "javascript:window.history.back()"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        New Task
+      </h1>
+
+        <p></p>
+      
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--l label-task-sub-heading" for="task-title">
+          Title
+        </label>
+        <input class="govuk-input" id="task-title" name="task-title" type="text" value="{{data['task-title']}}">
+      </div>
+      
+      <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--l label-task-sub-heading" for="task-description">
+            Description
+          </label>
+        <textarea class="govuk-textarea" id="task-description" name="task-description" rows="5" aria-describedby="task-description-hint">{{data['task-description']}}</textarea>
+      </div>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <p class="govuk-fieldset__heading label-task-sub-heading">
+              Status
+            </p>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus" name="taskStatus" type="radio" value="NOT_STARTED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus">
+                NOT_STARTED
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-2" name="taskStatus" type="radio" value="IN_PROGRESS">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-2">
+                IN_PROGRESS
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="READY_FOR_REVIEW">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                READY_FOR_REVIEW
+              </label>
+            </div>            
+          </div>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="COMPLETED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                COMPLETED
+              </label>
+            </div>            
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-4" name="taskStatus" type="radio" value="OVERDUE">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-4">
+                OVERDUE
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="CANCELLED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                CANCELLED
+              </label>
+            </div>            
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" role="group" aria-describedby="task-duedate-hint">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <p class="govuk-fieldset__heading label-task-sub-heading">
+              Due date
+            </p>
+          </legend>
+          <div id="task-duedate-hint" class="govuk-hint">
+            For example, 27 3 2007
+          </div>
+          <div class="govuk-date-input" id="task-duedate">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="task-duedate-day">
+                  Day
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="task-duedate-day" name="task-duedate-day" type="text" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="task-duedate-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="task-duedate-month" name="task-duedate-month" type="text" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="task-duedate-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="task-duedate-year" name="task-duedate-year" type="text" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+        <br />
+
+      <form class="form" method="post" id="formButton">
+
+        {{ govukButton({
+          text: "Save"
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+<script>
+
+  const formToSubmitAfterApiCall = document.getElementById("formButton"); 
+
+  formToSubmitAfterApiCall.addEventListener("submit", function(event) {
+    event.preventDefault();
+    console.log("test");
+    console.log("taskStatus: " + document.querySelector('input[name=taskStatus]:checked').value);
+    submitFunc();
+  });
+
+
+  function submitFunc() { 
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var year  = document.getElementById('task-duedate-year').value;
+    var month = document.getElementById('task-duedate-month').value;
+    var monthLength = month.length;
+    if (monthLength < 2) {
+      month = "0" + month;
+    }
+    var day   = document.getElementById('task-duedate-day').value;
+    var dayLength = day.length;
+    if (dayLength < 2) {
+      day = "0" + day;
+    }
+
+    var dueDateTest = year +"-"+ month +"-"+ day + "T00:00:00.000000001";
+    const d = new Date(dueDateTest);
+
+    var taskTitle = document.getElementById('task-title').value;
+    var taskDescription = document.getElementById('task-description').value;
+    var taskStatus = document.querySelector('input[name=taskStatus]:checked').value;
+
+    const raw = JSON.stringify({
+      "title": taskTitle,
+      "description": taskDescription,
+      "status": taskStatus,
+      "dueDate": dueDateTest
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch("http://localhost:8080/tasks", requestOptions)
+      .then((response) => response.text())
+      .then((result) => 
+        { 
+          console.log( document.getElementById('task-title').value );
+          window.location = '/task-list';
+        })
+      .catch((error) => console.error("e: " + error));
+  }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Check your answers template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "javascript:window.history.back()"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      <h1 class="govuk-heading-xl">
+        Task Detail
+      </h1>
+
+      {% from "govuk/components/input/macro.njk" import govukInput %}
+
+      {{ govukInput({
+        label: {
+          text: "ID",
+          classes: "govuk-label--l label-task-sub-heading",
+          isPageHeading: true
+        },
+        id: "task-id",
+        name: "task-id",
+        value: data['task-id'],
+        readonly: true
+      }) }}
+
+      <style>
+      #task-id {
+        pointer-events: none;
+      }
+      </style>
+      
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--l label-task-sub-heading" for="task-title">
+          Title
+        </label>
+        <input class="govuk-input" id="task-title" name="task-title" type="text" value="{{data['task-title']}}">
+      </div>
+
+      <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--l label-task-sub-heading" for="task-description">
+            Description
+          </label>
+        <textarea class="govuk-textarea" id="task-description" name="task-description" rows="5" aria-describedby="task-description-hint">{{data['task-description']}}</textarea>
+      </div>
+
+
+      <!--<div class="govuk-form-group">
+        <label class="govuk-label govuk-label--l label-task-detail" for="task-status">
+          Status
+        </label>
+        <input class="govuk-input" id="task-status" name="task-status" type="text" value="">
+      </div>-->
+
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <p class="govuk-fieldset__heading label-task-sub-heading">
+              Status
+            </p>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus" name="taskStatus" type="radio" value="NOT_STARTED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus">
+                NOT_STARTED
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-2" name="taskStatus" type="radio" value="IN_PROGRESS">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-2">
+                IN_PROGRESS
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="READY_FOR_REVIEW">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                READY_FOR_REVIEW
+              </label>
+            </div>            
+          </div>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="COMPLETED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                COMPLETED
+              </label>
+            </div>            
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-4" name="taskStatus" type="radio" value="OVERDUE">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-4">
+                OVERDUE
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="taskStatus-3" name="taskStatus" type="radio" value="CANCELLED">
+              <label class="govuk-label govuk-radios__label" for="taskStatus-3">
+                CANCELLED
+              </label>
+            </div>            
+          </div>
+        </fieldset>
+      </div>
+
+
+
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--l label-task-sub-heading" for="task-duedate">
+          Due date
+        </label>
+        <input class="govuk-input" id="task-duedate" name="task-duedate" type="text" value="">
+      </div>      
+
+      <div class="two-buttons">
+        <form action="/task-list" method="post" novalidate id="formButtonUpdate">
+          {{ govukButton({
+            text: "Update"
+          }) }}
+        </form>
+        <!--<form action="/task-confirm-delete?task-id={{data['task-id']}}" method="post" novalidate id="formButtonDelete">-->
+        <form action="/task-list" method="post" novalidate id="formButtonDelete">
+          {{ govukButton({
+            text: "Delete"          
+          }) }}
+        </form>
+      </div>        
+
+    </div>
+  </div>
+
+  <script>
+
+  var taskId = document.getElementById('task-id').value;
+
+    console.log("taskId: " + taskId);
+
+  var url = "http://localhost:8080/tasks/" + taskId;
+
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow"
+  };
+
+  fetch(url, requestOptions)
+  .then((response) => response.text())
+  .then((result) =>  {
+
+    console.log("result: " + result);
+
+    var jsonData = JSON.parse(result);
+    console.log("jsonData: " + jsonData.title);
+
+    document.getElementById('task-title').value = jsonData.title;
+    document.getElementById('task-description').innerHTML = jsonData.description;
+    document.getElementById('task-duedate').value = (jsonData.dueDate).substring(0,10);
+
+    console.log( 'jsonData.status: ' + jsonData.status );
+    console.log( 'taskStatus: ' + document.getElementById('taskStatus').value  );
+    console.log( 'checked: ' + document.getElementById('taskStatus').checked );
+    console.log( 'byName: ' + document.getElementsByName('taskStatus').length );
+    console.log( 'array: ' + document.getElementsByName('taskStatus')[0].checked );
+
+    var numberOfRadioButtons = document.getElementsByName('taskStatus').length;
+
+    for ( i=0; i<numberOfRadioButtons; i++ ) {
+      if ( document.getElementsByName('taskStatus')[i].value == jsonData.status ) {
+        document.getElementsByName('taskStatus')[i].checked = true;
+        break;
+      }
+    }    
+  })
+  .catch((error) => console.error(error));        
+
+
+  document.getElementById("formButtonUpdate").addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    console.log( document.getElementById('task-title').value );
+    console.log( document.getElementById('task-description').value );
+
+
+    var numberOfRadioButtons = document.getElementsByName('taskStatus').length;
+
+    var taskStatus = "";
+
+    for ( i=0; i<numberOfRadioButtons; i++ ) {
+      if ( document.getElementsByName('taskStatus')[i].checked ) {
+        taskStatus = document.getElementsByName('taskStatus')[i].value;
+        break;
+      }
+    }
+
+    console.log( "taskStatus: " + taskStatus );
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var dueDate = document.getElementById('task-duedate').value + "T00:00:00.000000001";
+
+    const raw = JSON.stringify({
+      "title": document.getElementById('task-title').value,
+      "description": document.getElementById('task-description').innerHTML,
+      "status": taskStatus,
+      "dueDate": dueDate
+    });
+
+    console.log( raw );
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    var taskId = document.getElementById('task-id').value;
+    var urlForRestApi = "http://localhost:8080/tasks/" + taskId; 
+
+    fetch(urlForRestApi, requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        console.log("result: " + result);
+        window.location = '/task-list';
+      })
+      .catch((error) => console.error(error));
+
+  });
+
+
+  document.getElementById("formButtonDelete").addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    console.log( document.getElementById('task-title').value );
+    console.log( document.getElementById('task-description').value );
+
+    const requestOptions = {
+      method: "DELETE",
+      redirect: "follow"
+    };
+
+    var taskId = document.getElementById('task-id').value;
+    var urlForRestApi = "http://localhost:8080/tasks/" + taskId;     
+
+    fetch(urlForRestApi, requestOptions)
+      .then((response) => response.text())
+      .then((result) => { 
+        console.log(result);
+        window.location = '/task-list';
+      })
+      .catch((error) => console.error(error));  
+  });  
+
+  </script>  
+
+{% endblock %}

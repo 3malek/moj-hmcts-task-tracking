@@ -1,0 +1,168 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Task List – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Task List</h2>
+      <ul id="list-of-tasks" class="govuk-task-list">        
+        <li class="govuk-task-list__item govuk-task-list__item--with-link">
+          <div class="govuk-task-list__name-and-hint">          
+            <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="first-section-1-status">
+              Name of first task
+            </a>          
+          </div>
+          <div class="govuk-task-list__status" id="first-section-1-status">          
+            Completed          
+          </div>
+        </li>        
+        <li class="govuk-task-list__item govuk-task-list__item--with-link">
+          <div class="govuk-task-list__name-and-hint">          
+            <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="first-section-2-status">
+              Name of second task
+            </a>
+          </div>
+          <div class="govuk-task-list__status" id="first-section-2-status">          
+            <strong class="govuk-tag govuk-tag--blue">
+              Incomplete
+            </strong>          
+          </div>
+        </li>        
+      </ul>
+
+    </div>
+  </div>
+
+  <form action="/task-new" method="post" novalidate id="formButton">
+    {{ govukButton({
+      text: "Create a new task"
+    }) }}
+  </form>
+
+
+  <script>
+
+  var url = "http://localhost:8080/tasks";
+
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow"
+  };
+
+  fetch(url, requestOptions)
+  .then((response) => response.text())
+  .then((result) =>  {
+
+    console.log("result: " + result);
+
+    var jsonData = JSON.parse(result);
+    
+    var htmlElementPrefix = `<li class="two-divs">
+      <div class="govuk-task-list__item govuk-task-list__item--with-link div-individual div-1">
+                <div class="govuk-task-list__name-and-hint task-list-col">
+                  <a class="govuk-link govuk-task-list__link task-list-col" href="/task-detail?task-id=`;
+    var htmlElementHrefLinkClosingTag = `" aria-describedby="first-section-1-status">`;
+
+    var htmlElementDesc = `</a></div><div class="govuk-task-list__desc task-list-col" id="first-section-1-desc">`;            
+
+    var htmlElementTaskStatus = `</div><div class="govuk-task-list__status task-list-col" id="first-section-1-status">`;
+
+    var htmlElementTaskStatusDropDown = `<div class="govuk-form-group">
+                                          <label class="govuk-label" for="status">
+                                            <!--Status-->
+                                          </label>`;
+    var htmlElementTaskStatusOptions = ``;
+
+    const taskStatusOptions = ["NOT_STARTED", "IN_PROGRESS", "READY_FOR_REVIEW", "COMPLETED", "OVERDUE", "CANCELLED"];
+
+    var htmlElementDueDate = `</div><div class="govuk-task-list__duedate" id="first-section-1-duedate">`;
+
+    var htmlElementSuffix = `</div>`;
+
+    var listofItemsHtml = '';
+
+    jsonData.forEach(element => {
+
+      console.log("element: " + element.title);
+      console.log("ID: " + element.id);
+
+      taskStatusOptions.forEach(elementOption => {
+        if (elementOption == element.status) {
+          htmlElementTaskStatusOptions = htmlElementTaskStatusOptions +
+          `<option value="` + elementOption + `"selected>` + elementOption.toLowerCase() + `</option>`;        
+        }
+        else {
+          htmlElementTaskStatusOptions = htmlElementTaskStatusOptions +
+          `<option value="` + elementOption + `">` + elementOption.toLowerCase() + `</option>`;        
+        }
+      });
+      htmlElementTaskStatusOptions = htmlElementTaskStatusOptions + `</select>`;
+
+      listofItemsHtml = listofItemsHtml + 
+                                        htmlElementPrefix +                                        
+                                        element.id +
+                                        htmlElementHrefLinkClosingTag +
+                                        element.title +
+                                        htmlElementDesc +
+                                        (element.description).substring(0,21) + '...' + 
+                                        htmlElementTaskStatus +                                        
+                                        htmlElementDueDate +
+                                        (element.dueDate).substring(0,10) +
+                                        `</div>` +
+                                        `</div>` +
+                                        `<div class="govuk-task-list__item govuk-task-list__item--with-link div-individual div-2">` +
+                                        htmlElementTaskStatusDropDown +
+                                        `<select class="govuk-select" ` +
+                                        `id="ddStatus-` + element.id + `" ` +
+                                        `name="ddStatus-` + element.id + `" ` + 
+                                        `onChange="ddChanged(` + element.id + `)">` +
+                                        htmlElementTaskStatusOptions +
+                                        htmlElementSuffix +
+                                        `</div>` +
+                                        `<div>` +
+                                    `<form action="javascript:handleIt()" ` +
+                                          `method="post" novalidate ` + 
+                                          `id="formButtonUpdateStatus-` + element.id + `" style="visibility:hidden" ` +
+                                    `    {{ govukButton ({
+                                          text: "Update Status"
+                                        }) }}
+                                      </form>` +
+                                        `</div>` +
+                                        `</li>`;                                                                            
+
+          htmlElementTaskStatusOptions = ``;
+    });
+
+      console.log("listofItemsHtml: " + listofItemsHtml);
+      document.getElementById("list-of-tasks").innerHTML = listofItemsHtml;
+  })
+
+  .catch((error) => console.error(error));        
+
+
+  function ddChanged(id)
+  {
+    var elementId = "formButtonUpdateStatus-" + id;
+    document.getElementById(elementId).style.width = "150px";
+    document.getElementById(elementId).style.height = "40px";
+    document.getElementById(elementId).style.margin = "20px";
+    document.getElementById(elementId).style.visibility = "visible";
+  }
+
+  function handleIt(id)
+  {
+      var nameOfDd = "ddStatus-" + id;
+      var element = document.getElementById(nameOfDd);
+      var value = element.value;
+      var text = element.options[element.selectedIndex].text;
+  }
+
+</script>  
+
+{% endblock %}

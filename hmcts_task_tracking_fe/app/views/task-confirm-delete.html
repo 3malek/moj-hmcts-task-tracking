@@ -1,0 +1,210 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Check your answers template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "javascript:window.history.back()"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      <h1 class="govuk-heading-xl">
+        Check data for deletion
+      </h1>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "ID"
+            },
+            id: "task-id",
+            name: "task-id",
+            value: {
+              text: data['task-id']
+            },
+            actions: {
+              items: [
+                {
+                  href: "#",
+                  text: "",
+                  visuallyHiddenText: "Cannot change ID"
+                }
+              ]
+            }
+          }
+          ,
+          {
+            id: {
+              text: "task-title"
+            },
+            key: {
+              text: "Title"
+            },
+            value: {
+              text: data['task-title']
+            },
+            actions: {
+              items: [
+                {
+                  href: "/task-detail",
+                  text: "Change",
+                  visuallyHiddenText: "Change title"
+                }
+              ]
+            }
+          }
+          ,
+          {
+            key: {
+              text: "Description"
+            },
+            value: {
+              text: data['task-description']
+            },
+            actions: {
+              items: [
+                {
+                  href: "/task-detail",
+                  text: "Change",
+                  visuallyHiddenText: "Change description"
+                }
+              ]
+            }
+          }
+          ,
+          {
+            key: {
+              text: "Status"
+            },
+            value: {
+              text: data['taskStatus']
+            },
+            actions: {
+              items: [
+                {
+                  href: "/task-detail",
+                  text: "Change",
+                  visuallyHiddenText: "Change status"
+                }
+              ]
+            }
+          }
+          ,
+          {
+            key: {
+              text: "Due date"
+            },
+            value: {
+              text: data['task-duedate-year'] + " - " + data['task-duedate-month'] + " - " + data['task-duedate-day']
+            },
+            actions: {
+              items: [
+                {
+                  href: "/task-detail",
+                  text: "Change",
+                  visuallyHiddenText: "Change due date"
+                }
+              ]
+            }
+          }                      
+        ]
+      }) }}
+
+      <p>
+        Clicking the below button deletes the task (permanently) and navigates to task list page.
+      </p>
+
+      <form action="/task-list" method="post" novalidate id="formButton">
+
+        {{ govukButton({
+          text: "Confirm"
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+
+  var taskId = document.getElementById('task-id');
+
+  console.log("taskId: " + taskId);
+
+  var url = "http://localhost:8080/tasks/" + taskId;
+
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow"
+  };
+
+  fetch(url, requestOptions)
+  .then((response) => response.text())
+  .then((result) =>  {
+
+    console.log("result: " + result);
+
+    var jsonData = JSON.parse(result);
+    console.log("jsonData: " + jsonData.title);
+
+    document.getElementById('task-title').value = jsonData.title;
+    document.getElementById('task-description').innerHTML = jsonData.description;
+    document.getElementById('task-duedate').value = (jsonData.dueDate).substring(0,10);
+
+    console.log( 'jsonData.status: ' + jsonData.status );
+    console.log( 'taskStatus: ' + document.getElementById('taskStatus').value  );
+    console.log( 'checked: ' + document.getElementById('taskStatus').checked );
+    console.log( 'byName: ' + document.getElementsByName('taskStatus').length );
+    console.log( 'array: ' + document.getElementsByName('taskStatus')[0].checked );
+
+    var numberOfRadioButtons = document.getElementsByName('taskStatus').length;
+
+    for ( i=0; i<numberOfRadioButtons; i++ ) {
+      if ( document.getElementsByName('taskStatus')[i].value == jsonData.status ) {
+        document.getElementsByName('taskStatus')[i].checked = true;
+        break;
+      }
+    }    
+  })
+  .catch((error) => console.error(error));       
+
+
+  const formToSubmitAfterApiCall = document.getElementById("formButton"); 
+
+  formToSubmitAfterApiCall.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    console.log("test");
+
+    // localhost:8080/tasks/2
+
+    var taskId = document.getElementById("formButton").value;
+    var url = "http://localhost:8080/tasks/" + taskId;
+
+    const requestOptions = {
+      method: "DELETE",
+      redirect: "follow"
+    };
+
+    fetch("http://localhost:8080/tasks/2", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+
+        console.log(result);
+        window.location = '/task-list';
+
+      }) 
+      .catch((error) => console.error(error));
+  });
+    
+  </script>
+
+{% endblock %}

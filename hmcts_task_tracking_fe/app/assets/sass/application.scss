@@ -1,0 +1,96 @@
+
+//.label-task-detail-screen {
+.label-task-sub-heading {
+    font-size:19pt;
+}
+
+.govuk-task-list__desc {
+    padding-left:25px;
+}
+
+.govuk-task-list__duedate {
+    padding-left:25px;
+}
+
+.govuk-task-list__deletelink {
+    padding-left:20px;
+    /*text-align:right;*/
+}
+
+#formButtonDelete {
+    padding-left: 400px;
+}
+
+.two-buttons {
+    display: flex;
+}
+
+.two-divs 
+{
+    display: flex;    
+}
+
+.div-individual {
+    clear: both;
+    padding-left:20px;
+}
+
+.div-1 {
+    float: right;
+}
+
+.div-2 {
+    float: right;
+}
+
+.govuk-select {
+    width: 50px;
+}
+
+.task-list-col {
+    width: 200px;
+    white-space: nowrap;
+}
+
+.formButtonUpdateStatus {
+    width: 500px;
+    height: 20px;
+    padding-left:20px;
+    /*visibility: hidden;*/
+    visibility:visible;
+}
+
+/*#task-new-status-radio-row1, #task-new-status-radio-row2 {*/
+.govuk-radios {
+    display: flex;
+}
+
+.govuk-radios__item {
+    padding-right:30px;
+}
+
+
+
+/*
+.buttonOther {
+  font-family: "GDS Transport", arial, sans-serif;
+  font-weight: 400;
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 0;
+  padding: 8px 10px 7px;
+  border: 2px solid transparent;
+  border-radius: 0;
+  color: #ffffff;
+  background-color: #00703c;
+  box-shadow: 0 2px 0 #002d18;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+  -webkit-appearance: none;
+  padding-left:20px;
+  width: 100px;
+}*/

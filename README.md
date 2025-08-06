@@ -9,7 +9,7 @@ i. Download the code from https://github.com/3malek/moj-hmcts-task-tracking
 ii. On your workstation, create a folder for the frontend, e.g. /task_tracking_frontend/  
 iii. cd into this frontend folder and run the following (on the command line):  
 npx govuk-prototype-kit@latest create  
-iv. Copy the contents of /hmcts_task_tracking_fe/ into your frontend folder, which you created above (basically, you need to update the app folder).  
+iv. Copy the contents of /hmcts_task_tracking_fe/ into your frontend folder, which you created above (basically, you need to update the /app/ folder).  
 v. Run the following (from inside your frontend folder):  
 npm run dev  
 
@@ -17,7 +17,7 @@ vi. For the backend, inside /hmcts_task_tracking_be/ run the following (on the c
 ./gradlew build  
 vii. Then run (one of the following):
 * ./gradlew bootRun
-* ./java -jar build/libs/hmcts-0.0.1-SNAPSHOT.jar
+* java -jar build/libs/hmcts-0.0.1-SNAPSHOT.jar
 * within an IDE (e.g. IntelliJ)
 
 viii. Finally, via a web browser, navigate to: http://localhost:3000/  
@@ -39,11 +39,11 @@ curl -v localhost:8080/tasks
 curl -v localhost:8080/tasks/1  
 curl -v localhost:8080/tasks/99  
 
-curl -X POST localhost:8080/tasks -H "Content-type:application/json" -d "{\"title\": \"New Test Data\", \"description\": \"Report needs to be ready for review by Thursday.\", \"status\": \"NOT_STARTED\", \"dueDate\": \"2027-01-01T18:11:35.522786900\" }"  
+curl -X POST localhost:8080/tasks -H "Content-type:application/json" -d "{\\"title\\": \\"New Test Data\\", \\"description\\": \\"Report needs to be ready for review by Thursday.\\", \\"status\\": \\"NOT_STARTED\\", \\"dueDate\\": \\"2027-01-01T18:11:35.522786900\\" }"  
 
-curl -X PUT localhost:8080/tasks/2 -H "Content-type:application/json" -d "{\"title\": \"Updated Test Data\", \"description\": \"Prefer Thursday, but Friday is acceptable\", \"status\": \"IN_PROGRESS\", \"dueDate\": \"2027-01-01T18:11:35.522786900\" }"  
+curl -X PUT localhost:8080/tasks/2 -H "Content-type:application/json" -d "{\\"title\\": \\"Updated Test Data\\", \\"description\\": \\"Prefer Thursday, but Friday is acceptable\\", \\"status\\": \\"IN_PROGRESS\\", \\"dueDate\\": \\"2027-01-01T18:11:35.522786900\\" }"  
 
-curl -X PATCH localhost:8080/tasks/2/IN_PROGRESS  
+curl -X PATCH localhost:8080/tasks/2/READY_FOR_REVIEW  
 
 curl -X DELETE localhost:8080/tasks/2  
 

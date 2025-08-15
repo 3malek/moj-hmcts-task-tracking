@@ -1,8 +1,8 @@
 package me.umalik.hmcts.domain;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,7 +23,7 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = status;
-        this.dueDate = dueDate;
+        this.dueDate = dueDate.truncatedTo(ChronoUnit.SECONDS);
     }
 
     public Long getId() {

@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class TaskControllerTest {
+public class ControllerSmokeTest {
 
     @Autowired
     private TaskController controller;
 
     @Test
-    void smokeTest_contextLoads() throws Exception
+    void loadContext_controllerNotNull() throws Exception
     {
         assertThat( controller ).isNotNull();
     }
